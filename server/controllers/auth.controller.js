@@ -2,11 +2,10 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../config/jwt');
 const Role = require('../models/Role');
-const bcryptjs = require('bcryptjs');
+const bcrypt = require('bcryptjs');
 
 const login = async (req, res) => {
   const { username, password } = req.body;
-
   try {
     const user = await User.findOne({ username }).populate('roles');
     if (!user) {
@@ -65,11 +64,10 @@ const firstAdmin = async (req, res) => {
       await adminRole.save();
     }
 
-    const hashedPassword = await bcryptjs.hash('123456', 10);
     const adminUser = new User({
       username: 'admin',
       email: 'admin@example.com',
-      password: hashedPassword,
+      password: '123456',
       roles: [adminRole._id]
     });
 
