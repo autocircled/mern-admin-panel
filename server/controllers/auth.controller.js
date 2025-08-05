@@ -1,6 +1,8 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const { jwtSecret } = require('../config/jwt');
+const Role = require('../models/Role');
+const bcryptjs = require('bcryptjs');
 
 const login = async (req, res) => {
   const { username, password } = req.body;
@@ -49,7 +51,39 @@ const getMe = async (req, res) => {
   }
 };
 
+const firstAdmin = async (req, res) => {
+  try {
+    const userCount = await User.countDocuments();
+    if (userCount > 0) {
+      return res.status(400).json({ msg: 'Admin user already exists' });
+    }
+
+    // Find or create admin role
+    let adminRole = await Role.findOne({ name: 'admin' });
+    if (!adminRole) {
+      adminRole = new Role({ name: 'admin', permissions: ['all'] });
+      await adminRole.save();
+    }
+
+    const hashedPassword = await bcryptjs.hash('123456', 10);
+    const adminUser = new User({
+      username: 'admin',
+      email: 'admin@example.com',
+      password: hashedPassword,
+      roles: [adminRole._id]
+    });
+
+    await adminUser.save();
+    
+    res.json({ msg: 'First admin user created successfully' });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
 module.exports = {
   login,
-  getMe
+  getMe,
+  firstAdmin
 };
