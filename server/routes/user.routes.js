@@ -3,6 +3,8 @@ const router = express.Router();
 const userController = require('../controllers/user.controller');
 const auth = require('../middleware/auth');
 const role = require('../middleware/role');
+const { check } = require('express-validator');
+const { validateRegister } = require('../middleware/validation');
 
 // @route   GET /api/users
 // @desc    Get all users (Admin only)
@@ -23,5 +25,10 @@ router.put('/:id', auth, role('admin'), userController.updateUser);
 // @desc    Delete user
 // @access  Private/Admin
 router.delete('/:id', auth, role('admin'), userController.deleteUser);
+
+// @route   POST /api/users
+// @desc    Create new user with role and permissions
+// @access  Private/Admin
+router.post('/', auth, role('admin'), validateRegister, userController.createUser);
 
 module.exports = router;

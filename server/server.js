@@ -5,6 +5,7 @@ const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
 const authRoutes = require('./routes/auth.routes');
+const roleRoutes = require('./routes/role.routes');
 const userRoutes = require('./routes/user.routes');
 
 const app = express();
@@ -20,6 +21,7 @@ connectDB(); // Updated connection method
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/roles', roleRoutes);
 app.use('/api/users', userRoutes);
 
 const PORT = process.env.PORT || 5000;

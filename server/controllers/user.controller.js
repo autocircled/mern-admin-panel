@@ -1,3 +1,4 @@
+const Role = require('../models/Role');
 const User = require('../models/User');
 
 const getAllUsers = async (req, res) => {
@@ -67,9 +68,40 @@ const deleteUser = async (req, res) => {
   }
 };
 
+const createUser = async (req, res) => {
+  try {
+    const { username, email, password, roles } = req.body;
+
+    // Check if roles exist
+    const foundRoles = await Role.find({ _id: { $in: roles } });
+    if (foundRoles.length !== roles.length) {
+      return res.status(400).json({ msg: 'One or more roles not found' });
+    }
+
+    // Create user (password will be hashed by pre-save hook)
+    const user = new User({
+      username,
+      email,
+      password,
+      roles
+    });
+
+    await user.save();
+    
+    // Return user without password
+    const userToReturn = await User.findById(user._id).select('-password').populate('roles');
+    res.json(userToReturn);
+
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Server error');
+  }
+};
+
 module.exports = {
   getAllUsers,
   getUserById,
   updateUser,
-  deleteUser
+  deleteUser,
+  createUser
 };
