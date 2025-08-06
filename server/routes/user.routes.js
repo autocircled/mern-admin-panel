@@ -3,8 +3,7 @@ const router = express.Router();
 const userController = require('../controllers/user.controller');
 const auth = require('../middleware/auth');
 const role = require('../middleware/role');
-const { check } = require('express-validator');
-const { validateRegister } = require('../middleware/validation');
+const { validateRegister, validateUserUpdate } = require('../middleware/validation');
 
 // @route   GET /api/users
 // @desc    Get all users (Admin only)
@@ -19,7 +18,7 @@ router.get('/:id', auth, role('admin'), userController.getUserById);
 // @route   PUT /api/users/:id
 // @desc    Update user
 // @access  Private/Admin
-router.put('/:id', auth, role('admin'), userController.updateUser);
+router.put('/:id', auth, role('admin'), validateUserUpdate, userController.updateUser);
 
 // @route   DELETE /api/users/:id
 // @desc    Delete user

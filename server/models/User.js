@@ -15,6 +15,11 @@ UserSchema.pre('save', async function(next) {
   next();
 });
 
+/**
+ * Compares a given password with the user's hashed password
+ * @param {string} password - The password to compare
+ * @returns {Promise<boolean>} - A promise that resolves to true if the passwords match, false otherwise
+ */
 UserSchema.methods.comparePassword = function(password) {
   return bcrypt.compare(password, this.password);
 };
