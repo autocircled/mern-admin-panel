@@ -22,7 +22,7 @@ const UsersPage = () => {
       
       try {
         const response = await api.getAllUsers(token);
-        setUsers(response.data);
+        setUsers(response);
       } catch (err) {
         console.error('Failed to fetch users:', err);
       }

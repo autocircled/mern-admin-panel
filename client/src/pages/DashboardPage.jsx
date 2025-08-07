@@ -46,9 +46,9 @@ const DashboardPage = () => {
           {hasRole('admin') && (
             <Button 
               variant="contained" 
-              onClick={() => navigate('/admin')}
+              onClick={() => navigate('/roles')}
             >
-              Admin Panel
+              Roles
             </Button>
           )}
           
