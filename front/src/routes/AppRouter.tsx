@@ -4,8 +4,14 @@ import LoginPage from '../pages/LoginPage';
 import DashboardPage from '../pages/DashboardPage';
 import UsersPage from '../pages/UsersPage';
 import Layout from '../components/Layout/Layout';
+import { ReactNode } from 'react';
 
-const PrivateRoute = ({ children, roles }) => {
+interface PrivateRouteProps {
+  children: ReactNode;
+  roles?: string[];
+}
+
+const PrivateRoute = ({ children, roles }: PrivateRouteProps) => {
   const { user, hasRole } = useAuth();
   
   if (!user) return <Navigate to="/login" />;

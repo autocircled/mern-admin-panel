@@ -1,21 +1,21 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
-import api from '../api/auth';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+// import { jwtDecode } from 'jwt-decode';
+import authService from '../api/auth';
+import type { AuthContextType, User } from '../types';
 
-const AuthContext = createContext();
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const initializeAuth = async () => {
       if (token) {
         try {
-          const decoded = jwtDecode(token);
-          const userResponse = await api.getMe(token);
-          setUser(userResponse.data);
+          const userData = await authService.getMe(token);
+          setUser(userData);
         } catch (err) {
           logout();
         }
@@ -25,30 +25,54 @@ export const AuthProvider = ({ children }) => {
     initializeAuth();
   }, [token]);
 
-  const login = async (credentials) => {
-    const response = await api.login(credentials);
-    const { token, user } = response.data;
+  const login = async (credentials: { username: string; password: string }) => {
+    const { token, user } = await authService.login(credentials);
     localStorage.setItem('token', token);
     setToken(token);
     setUser(user);
   };
 
   const logout = () => {
+    authService.logout();
     localStorage.removeItem('token');
     setToken(null);
     setUser(null);
   };
 
-  const hasRole = (role) => {
+  const hasRole = (role: string): boolean => {
     if (!user || !user.roles) return false;
     return user.roles.some(r => r.name === role);
   };
 
+  const hasPermission = (permission: string): boolean => {
+    if (!user || !user.roles) return false;
+    return user.roles.some(role => 
+      role.permissions.includes(permission) || 
+      role.permissions.includes('all')
+    );
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, hasRole, loading }}>
+    <AuthContext.Provider 
+      value={{ 
+        user, 
+        token, 
+        login, 
+        logout, 
+        loading,
+        hasRole,
+        hasPermission
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
 };
 
-export const useAuth = () => useContext(AuthContext);
+export const useAuth = (): AuthContextType => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};

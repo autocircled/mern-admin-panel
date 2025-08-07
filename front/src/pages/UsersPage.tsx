@@ -1,14 +1,36 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material';
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableContainer, 
+  TableHead, 
+  TableRow, 
+  Paper, 
+  Button 
+} from '@mui/material';
 import api from '../api/users';
+
+interface Role {
+  name: string;
+}
+
+interface User {
+  _id: string;
+  username: string;
+  email: string;
+  roles: Role[];
+}
 
 const UsersPage = () => {
   const { token } = useAuth();
-  const [users, setUsers] = useState([]);
+  const [users, setUsers] = useState<User[]>([]);
 
   useEffect(() => {
     const fetchUsers = async () => {
+      if (!token) return;
+      
       try {
         const response = await api.getAllUsers(token);
         setUsers(response.data);
