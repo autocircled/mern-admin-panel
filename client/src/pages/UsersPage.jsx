@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import MainLayout from '@/components/layout/main';
 
 const UsersPage = () => {
   const { token } = useAuth();
@@ -31,31 +32,33 @@ const UsersPage = () => {
     fetchUsers();
   }, [token]);
 
-  return (  
-    <div className='w-full p-2 md:p-4'>
-      <h1 className='text-2xl font-bold mb-4'>Users</h1>
-      <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Username</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Roles</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {users.map(user => (
-          <TableRow key={user._id}>
-            <TableCell className="font-medium">{user.username}</TableCell>
-            <TableCell>{user.email}</TableCell>
-            <TableCell>{user.roles.map(role => role.name).join(', ')}</TableCell>
-            <TableCell className="text-right"><Button variant="outlined" size="small">Edit</Button></TableCell>
-          </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
+  return (
+    <MainLayout>
+      <div className='w-full p-2 md:p-4'>
+        <h1 className='text-2xl font-bold mb-4'>Users</h1>
+        <Table>
+          <TableCaption>A list of your recent invoices.</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Username</TableHead>
+              <TableHead>Email</TableHead>
+              <TableHead>Roles</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {users.map(user => (
+            <TableRow key={user._id}>
+              <TableCell className="font-medium">{user.username}</TableCell>
+              <TableCell>{user.email}</TableCell>
+              <TableCell>{user.roles.map(role => role.name).join(', ')}</TableCell>
+              <TableCell className="text-right"><Button variant="outlined" size="small">Edit</Button></TableCell>
+            </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </MainLayout>
   );
 };
 

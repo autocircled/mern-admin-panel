@@ -7,27 +7,27 @@ import UsersPage from './pages/UsersPage';
 const AppRouter = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        
-        <Route 
-          path="/" 
-          element={
-            <ProtectedRoute>
-              <DashboardPage />
-            </ProtectedRoute>
-          } 
-        />
-        
-        <Route 
-          path="/users" 
-          element={
-            <ProtectedRoute permissions={['manage_users']}>
-              <UsersPage />
-            </ProtectedRoute>
-          } 
-        />
-      </Routes>
+          
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route 
+            path="/" 
+            element={
+              <ProtectedRoute>
+                  <DashboardPage />
+              </ProtectedRoute>
+            } 
+          />
+          
+          <Route 
+            path="/users" 
+            element={
+              <ProtectedRoute permissions={['manage_users']}>
+                  <UsersPage />
+              </ProtectedRoute>
+            } 
+            />
+        </Routes>
     </BrowserRouter>
   );
 };
