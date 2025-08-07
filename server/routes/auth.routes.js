@@ -1,5 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const auth = require('../middleware/auth');
+const role = require('../middleware/role');
 const authController = require('../controllers/auth.controller');
 const { validateLogin } = require('../middleware/validation');
 
@@ -11,7 +13,7 @@ router.post('/login', validateLogin, authController.login);
 // @route   GET /api/auth/me
 // @desc    Get current user data
 // @access  Private
-router.get('/me', authController.getMe);
+router.get('/me', auth, authController.getMe);
 
 // @route   POST /api/auth/first-admin
 // @desc    Create first admin user (only works when no users exist)

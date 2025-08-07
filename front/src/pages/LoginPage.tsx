@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/useAuth';
 import { Box, TextField, Button, Typography, Paper, Container } from '@mui/material';
 
 const LoginPage: React.FC = () => {
@@ -16,10 +16,12 @@ const LoginPage: React.FC = () => {
     e.preventDefault();
     setError('');
     try {
-      await login(credentials);
-      navigate('/dashboard');
+        // console.log(credentials);
+        await login(credentials);
+        navigate('/');
     } catch (err) {
-      setError(err.msg || 'Login failed. Please try again.');
+        const error = err as { msg?: string };
+        setError(error.msg || 'Login failed. Please try again.');
     }
   };
 

@@ -1,9 +1,10 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 // import { jwtDecode } from 'jwt-decode';
 import authService from '../api/auth';
 import type { AuthContextType, User } from '../types';
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+// eslint-disable-next-line react-refresh/only-export-components
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
@@ -17,6 +18,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const userData = await authService.getMe(token);
           setUser(userData);
         } catch (err) {
+          const error = err as Error;
+          console.error(error.message);
           logout();
         }
       }
@@ -69,10 +72,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 };
 
-export const useAuth = (): AuthContextType => {
-  const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
-  return context;
-};
+// export const useAuth = (): AuthContextType => {
+//   const context = useContext(AuthContext);
+//   if (context === undefined) {
+//     throw new Error('useAuth must be used within an AuthProvider');
+//   }
+//   return context;
+// };
