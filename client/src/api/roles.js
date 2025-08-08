@@ -1,4 +1,5 @@
 import axios from 'axios';
+import API_CONFIG from '../api/constants';
 
 const createRole = async (roleData, token) => {
   const config = {
@@ -9,7 +10,7 @@ const createRole = async (roleData, token) => {
   };
 
   try {
-    const res = await axios.post('/api/roles', roleData, config);
+    const res = await axios.post(`${API_CONFIG.API_ENDPOINT}/api/roles`, roleData, config);
     return res.data;
   } catch (err) {
     if (err.response) {
@@ -27,7 +28,7 @@ const getAllRoles = async (token) => {
   };
 
   try {
-    const res = await axios.get('/api/roles', config);
+    const res = await axios.get(`${API_CONFIG.API_ENDPOINT}/api/roles`, config);
     return res.data;
   } catch (err) {
     if (err.response) {

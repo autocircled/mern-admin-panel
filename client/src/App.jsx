@@ -3,6 +3,7 @@ import LoginPage from './pages/LoginPage';
 import DashboardPage from './pages/DashboardPage';
 import ProtectedRoute from './components/ProtectedRoute';
 import UsersPage from './pages/UsersPage';
+import RolesPage from './pages/RolesPage';
 
 const AppRouter = () => {
   return (
@@ -24,6 +25,14 @@ const AppRouter = () => {
             element={
               <ProtectedRoute permissions={['manage_users']}>
                   <UsersPage />
+              </ProtectedRoute>
+            } 
+            />
+          <Route 
+            path="/roles" 
+            element={
+              <ProtectedRoute permissions={['manage_users']}>
+                  <RolesPage />
               </ProtectedRoute>
             } 
             />
