@@ -52,6 +52,23 @@ export const AuthProvider = ({ children }) => {
     );
   };
 
+  const hasRequiredRole = (requiredRoles) => {
+    if (!requiredRoles || requiredRoles.length === 0) return true;
+    return requiredRoles.some(role => hasRole(role));
+  };
+
+  const hasRequiredPermission = (requiredPermissions) => {
+    if (!requiredPermissions || requiredPermissions.length === 0) return true;
+    return requiredPermissions.some(perm => hasPermission(perm));
+  };
+
+  const shouldDisplayItem = (item) => {
+    const hasRole = hasRequiredRole(item.roles);
+    const hasPerm = hasRequiredPermission(item.permissions);
+    if (!item.roles && !item.permissions) return true;
+    return hasRole || hasPerm;
+  };
+
   return (
     <AuthContext.Provider 
       value={{ 
@@ -61,7 +78,8 @@ export const AuthProvider = ({ children }) => {
         logout, 
         loading,
         hasRole,
-        hasPermission
+        hasPermission,
+        shouldDisplayItem
       }}
     >
       {children}

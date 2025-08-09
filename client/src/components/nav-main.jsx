@@ -20,13 +20,15 @@ import {
 import { Link } from "react-router-dom";
 
 export function NavMain({
-  items
+  items,
+  shouldDisplayItem
 }) {
+
   return (
     <SidebarGroup>
       <SidebarGroupLabel>Platform</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
+        {items.map((item) => shouldDisplayItem(item) && (
           <Collapsible
             key={item.title}
             asChild

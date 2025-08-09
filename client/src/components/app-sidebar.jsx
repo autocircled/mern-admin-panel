@@ -24,6 +24,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar"
+import { useAuth } from "@/context/AuthContext"
 
 // This is sample data.
 const data = {
@@ -55,6 +56,8 @@ const data = {
       url: "#",
       icon: Users,
       isActive: true,
+      permissions: ["all", "manage_users"],
+      roles: ["admin"],
       items: [
         {
           title: "All Users",
@@ -154,17 +157,18 @@ const data = {
 export function AppSidebar({
   ...props
 }) {
+  const { user, logout, shouldDisplayItem } = useAuth();
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={data.navMain} />
+        <NavMain items={data.navMain} shouldDisplayItem={shouldDisplayItem} />
         <NavProjects projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={user} logout={logout} />
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
